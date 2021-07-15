@@ -26,5 +26,6 @@ module.exports={
             .set('components',resolve('./src/components'))
             .set('views',resolve('src/views'))
             .set('profile',resolve('src/profile'))
+            .set('network',resolve('src/network'))
     }
 }
