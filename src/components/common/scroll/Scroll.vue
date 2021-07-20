@@ -43,20 +43,32 @@ export default {
         })
 
         // 2.监听滚动位置
-        this.scroll.on('scroll', (position) => {
-            this.$emit('scroll', position)
-        })
+        if (this.probeType === 2 || this.probeType === 3){
+            this.scroll.on('scroll', (position) => {
+                this.$emit('scroll', position)
+            })
+        }
+        
 
-        // 3.监听上拉事件
-        this.scroll.on('pullingUp', () => {
-            // console.log('上拉加载更多');
-            this.$emit('pullingUp')
-        })
+        // // 3.监听上拉事件
+        // this.scroll.on('pullingUp', () => {
+        //     // console.log('上拉加载更多');
+        //     this.$emit('pullingUp')
+        // })
+
+        // 3.监听scroll滚动到底部
+        if (this.pullUpLoad) {
+            this.scroll.on('pullingUp', () => {
+                // console.log('buttom');
+                this.$emit('pullingUp')
+            })
+        }
 
     },
     updated() {
-        // 刷新一下这个scroll才能正常使用(btw我也不知道为啥)
-        this.scroll.refresh()
+        // 有其他解决方法
+        // // 刷新一下这个scroll才能正常使用
+        // this.scroll.refresh()
     },
     methods: {
         scrollTo(x, y, time) {
@@ -64,6 +76,10 @@ export default {
         },
         finishPullUp(){
             this.scroll.finishPullUp()
+        },
+        refresh() {
+            // console.log('----');
+            this.scroll && this.scroll.refresh()
         }
     }
 }
