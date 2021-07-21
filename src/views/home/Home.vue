@@ -56,7 +56,8 @@
                 currentType: 'pop',
                 isShowBackTop: false,
                 tabOffsetTop: 0,
-                isTabFixed: false
+                isTabFixed: false,
+                saveY: 0,
             }
         },
         components: {
@@ -91,6 +92,18 @@
             this.$bus.$on('itemImageLoad', () => {
                 refresh()
             })
+        },
+        destroyed() {
+            // console.log('home');
+        },
+        activated() {
+            // console.log('activated');
+            this.$refs.scroll.scrollTo(0, this.saveY, 0)
+            this.$refs.scroll.refresh()
+        },
+        deactivated() {
+            // console.log('deactivated');
+            this.saveY = this.$refs.scroll.scroll.y
         },
         methods: {
             /**
@@ -147,7 +160,7 @@
                 this.tabOffsetTop = this.$refs.tabControl2.$el.offsetTop
             }
             
-        }
+        },
     }
 </script>
 
