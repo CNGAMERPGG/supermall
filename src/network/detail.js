@@ -1,5 +1,6 @@
 import {request} from './request'
 
+// 请求详情
 export function getDetail(iid) {
     return request({
         url: '/detail',
@@ -9,6 +10,7 @@ export function getDetail(iid) {
     })
 }
 
+// 请求商品详情
 export class Goods {
     constructor(itemInfo, columns, shopInfo) {
 	    this.title = itemInfo.title;
@@ -21,6 +23,7 @@ export class Goods {
 	}
 }
 
+// 商铺信息
 export class Shop {
     constructor(shopInfo) {
         this.shopLogo = shopInfo.shopLogo;
@@ -29,4 +32,12 @@ export class Shop {
 		this.cSells = shopInfo.cSells;
 		this.cGoods = shopInfo.cGoods;
     }
+}
+
+//参数信息
+export class Param {
+	constructor(info, rule) {
+	    this.info = info.set;
+		this.rule = rule.tables;
+	}
 }

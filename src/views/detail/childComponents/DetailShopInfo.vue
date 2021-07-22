@@ -15,6 +15,7 @@
 					<p>全部宝贝</p>
 				</div>
 			</div>
+			<div class=" border"></div>
 			<div class="shop-other-item shop-other-right">
 				<div v-for="(item, index) in shop.score" :key="index">
 					{{item.name}}&ensp;
@@ -58,6 +59,9 @@
 	.f16 {
 		font-size: 16px;
 	}
+	.detail-shop-info {
+		border-bottom: 4px solid #ededed;
+	}
 	.shop-name-info {
         display: flex;
 		align-items: center;
@@ -73,6 +77,7 @@
 	}
 	.shop-other-info {
         display: flex;
+		flex: 1;
 		font-size: 12px;
 		align-items: center;
 		line-height: 22px;
@@ -83,16 +88,25 @@
             display: flex;
             flex: 1;
             font-weight: bolder;
-			border-right: 1px solid #ececec;
+			// border-right: 1px solid #ececec;
+			padding-left: 3.8vh;
+			padding-right: 3.8vh;
 			div{
 				flex: 1;
 				text-align: center;
 			}
 		}
+		.border {
+			display: flex;
+			width: 1px;
+			height: 50px;
+			border-right: 1px solid #ececec;
+		}
 		.shop-other-right {
-			padding-left: 1vh;
-            
-            left: 1vh;
+			// padding-left: 10px;
+			// margin-left: 40px;
+			padding-left: 3.8vh;
+			padding-right: 3.8vh;
 			.score {
 				display: inline-block;
 				width: 30px;
