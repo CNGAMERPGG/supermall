@@ -10,6 +10,7 @@
             <detail-goods-info :detailInfo="detailInfo" @imgLoad="goodsImgLoad"/>
             <detail-param-info :paramInfo="paramInfo"/>
             <detail-comment-info :commentInfo="commentInfo"/>
+            <good-list :goods="recommend"/>
         </scroll>
         <back-top class="back-top" @click.native="backTop" v-show="isShowBackTop"></back-top>
     </div>
@@ -18,7 +19,7 @@
 <script>
 import DetailNavBar from './childComponents/DetailNavBar'
 
-import {getDetail, Goods, Shop, Param} from '@/network/detail'
+import {getDetail, Goods, Shop, Param, getRecommend} from '@/network/detail'
 import DetailSwiper from './childComponents/DetailSwiper.vue'
 import DetailBaseInfo from './childComponents/DetailBaseInfo.vue'
 import DetailShopInfo from './childComponents/DetailShopInfo.vue'
@@ -27,9 +28,13 @@ import DetailGoodsInfo from './childComponents/DetailGoodsInfo.vue'
 import DetailParamInfo from './childComponents/DetailParamInfo.vue'
 import DetailCommentInfo from './childComponents/DetailCommentInfo.vue'
 import BackTop from '@/components/content/backTop/BackTop'
+import GoodList from '../../components/content/goods/GoodList.vue'
+import {debounce} from '@/common/utils'
+import {itemListenerMixin} from '@/common/mixin'
 
 export default {
     name: "Detail",
+    mixins: [itemListenerMixin],
     data() {
         return {
             iid: null,
@@ -41,6 +46,8 @@ export default {
             detailInfo: {},
             paramInfo: {},
             commentInfo: [],
+            recommend: [],
+            itemImgListener: null,
         }
     },
     components: {
@@ -53,6 +60,7 @@ export default {
         DetailParamInfo,
         DetailCommentInfo,
         BackTop,
+        GoodList,
     },
     created() {
         // 1.保存传入的iid
@@ -60,7 +68,7 @@ export default {
 
         // 2.根据iid请求详情数据
         getDetail(this.iid).then(res => {
-            console.log(res);
+            // console.log(res);
             const data = res.result
             // 1.获取顶部的图片轮播数据
             // console.log(res.result.itemInfo.topImages);
@@ -83,6 +91,12 @@ export default {
                 this.commentInfo = data.rate.list
             }
         })
+
+        // 3.请求推荐数据
+        getRecommend().then(res => {
+            this.recommend = res.data.list
+        })
+
     },
     methods: {
         goodsImgLoad() {
@@ -98,8 +112,13 @@ export default {
             // // 2.决定tabControl是否吸顶(position: fixed)
             // this.isTabFixed = (-position.y) > this.tabOffsetTop
         },
+    },
+    mounted() {
+       
+    },
+    destroyed() {
+        this.$bus.$off('itemImgLoad', this.itemImgListener)
     }
-
 }
 </script>
 

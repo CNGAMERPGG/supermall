@@ -41,9 +41,11 @@
     import Scroll from '../../components/common/scroll/Scroll.vue'
     import BackTop from '../../components/content/backTop/BackTop.vue'
     import {debounce} from '@/common/utils.js'
+    import {itemListenerMixin} from '@/common/mixin'
 
     export default {
         name: "Home",
+        mixins: [itemListenerMixin],
         data() {
             return {
                 banners: [],
@@ -58,6 +60,7 @@
                 tabOffsetTop: 0,
                 isTabFixed: false,
                 saveY: 0,
+                itemImgListener: null,
             }
         },
         components: {
@@ -87,11 +90,10 @@
                         
         },
         mounted() {
-            // 1.图片加载的事件监听
-            const refresh = debounce(this.$refs.scroll.refresh)
-            this.$bus.$on('itemImageLoad', () => {
-                refresh()
-            })
+            // this.itemImgListener = () => {
+            //     this.$refs.scroll.refresh();
+            // }
+            // this.$bus.$on('itemImageLoad',this.itemImgListener);
         },
         destroyed() {
             // console.log('home');
@@ -102,8 +104,13 @@
             this.$refs.scroll.refresh()
         },
         deactivated() {
-            // console.log('deactivated');
+            console.log('deactivated');
+
+            // 1.保存Y值
             this.saveY = this.$refs.scroll.scroll.y
+
+            // 2.取消全局事件的监听
+            this.$bus.$off('itemImageLoad', this.itemImgListener)
         },
         methods: {
             /**
