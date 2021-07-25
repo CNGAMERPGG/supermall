@@ -1,6 +1,8 @@
 <template>
     <div class="detail">
-        <detail-nav-bar class="detail-nav"/>
+        <detail-nav-bar class="detail-nav" 
+                        @titleClick="titleClick"
+                        ref="nav"/>
         <scroll class="content" ref="scroll"
                 :probeType="3"
                 @scroll="contentScroll">
@@ -8,9 +10,9 @@
             <detail-base-info :goods="goods"/>
             <detail-shop-info :shop="shop"/>
             <detail-goods-info :detailInfo="detailInfo" @imgLoad="goodsImgLoad"/>
-            <detail-param-info :paramInfo="paramInfo"/>
-            <detail-comment-info :commentInfo="commentInfo"/>
-            <good-list :goods="recommend"/>
+            <detail-param-info ref="params" :paramInfo="paramInfo"/>
+            <detail-comment-info ref="comment" :commentInfo="commentInfo"/>
+            <good-list ref="recommend" :goods="recommend"/>
         </scroll>
         <back-top class="back-top" @click.native="backTop" v-show="isShowBackTop"></back-top>
     </div>
@@ -48,6 +50,9 @@ export default {
             commentInfo: [],
             recommend: [],
             itemImgListener: null,
+            themeTopYs: [],
+            getThemeTopY: null,
+            currentIndex: null
         }
     },
     components: {
@@ -90,6 +95,17 @@ export default {
             if (data.rate.cRate !== 0){
                 this.commentInfo = data.rate.list
             }
+
+            // this.$nextTick(() => {
+            //     this.themeTopYs = []
+            //     this.themeTopYs.push(0);
+            //     this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+            //     this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+            //     this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+            //     console.log(this.themeTopYs);
+            // })
+
+            
         })
 
         // 3.请求推荐数据
@@ -97,10 +113,23 @@ export default {
             this.recommend = res.data.list
         })
 
+        // 4.给getThemeTopY赋值(对给this.themeTopYs赋值的操作进行防抖)
+        this.getThemeTopY = debounce(() => {
+            this.themeTopYs = []
+
+            this.themeTopYs.push(0);
+            this.themeTopYs.push(this.$refs.params.$el.offsetTop)
+            this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
+            this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+
+            // console.log(this.themeTopYs);
+        }, 500)
+
     },
     methods: {
         goodsImgLoad() {
             this.$refs.scroll.refresh()
+            this.getThemeTopY()            
         },
         backTop() {
             this.$refs.scroll.scrollTo(0, 0, 300)
@@ -111,10 +140,33 @@ export default {
 
             // // 2.决定tabControl是否吸顶(position: fixed)
             // this.isTabFixed = (-position.y) > this.tabOffsetTop
+
+            // 获取Y值
+            const positionY = -position.y
+            let length = this.themeTopYs.length
+            for(let i = 0; i < length; i++) {
+                // if(positionY >= this.themeTopYs[parseInt(i)] && positionY < this.themeTopYs[parseInt(i)+1]) {
+                //     console.log(i);
+                // }
+                if (this.currentIndex !== i && ((i < length - 1 && positionY >= this.themeTopYs[i] && 
+                positionY < this.themeTopYs[i+1]) || (i === length - 1 && 
+                positionY >= this.themeTopYs[i]))) {
+                    this.currentIndex = i
+                    // console.log(this.currentIndex);
+                    this.$refs.nav.currentIndex = this.currentIndex
+                }
+            }
         },
+        titleClick(index) {
+            // console.log(index);
+            this.$refs.scroll.scrollTo(0, -this.themeTopYs[index]+44, 200)            
+        }
     },
     mounted() {
-       
+        
+    },
+    updated() {
+        
     },
     destroyed() {
         this.$bus.$off('itemImgLoad', this.itemImgListener)

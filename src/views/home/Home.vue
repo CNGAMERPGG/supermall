@@ -104,7 +104,7 @@
             this.$refs.scroll.refresh()
         },
         deactivated() {
-            console.log('deactivated');
+            // console.log('deactivated');
 
             // 1.保存Y值
             this.saveY = this.$refs.scroll.scroll.y
