@@ -52,7 +52,7 @@ export default {
             itemImgListener: null,
             themeTopYs: [],
             getThemeTopY: null,
-            currentIndex: null
+            currentIndex: 0
         }
     },
     components: {
@@ -118,9 +118,10 @@ export default {
             this.themeTopYs = []
 
             this.themeTopYs.push(0);
-            this.themeTopYs.push(this.$refs.params.$el.offsetTop)
-            this.themeTopYs.push(this.$refs.comment.$el.offsetTop)
-            this.themeTopYs.push(this.$refs.recommend.$el.offsetTop)
+            this.themeTopYs.push(this.$refs.params.$el.offsetTop-44)
+            this.themeTopYs.push(this.$refs.comment.$el.offsetTop-44)
+            this.themeTopYs.push(this.$refs.recommend.$el.offsetTop-44)
+            this.themeTopYs.push(Number.MAX_VALUE)
 
             // console.log(this.themeTopYs);
         }, 500)
@@ -144,22 +145,23 @@ export default {
             // 获取Y值
             const positionY = -position.y
             let length = this.themeTopYs.length
-            for(let i = 0; i < length; i++) {
+            for(let i = 0; i < length-1; i++) {
                 // if(positionY >= this.themeTopYs[parseInt(i)] && positionY < this.themeTopYs[parseInt(i)+1]) {
                 //     console.log(i);
                 // }
-                if (this.currentIndex !== i && ((i < length - 1 && positionY >= this.themeTopYs[i] && 
-                positionY < this.themeTopYs[i+1]) || (i === length - 1 && 
-                positionY >= this.themeTopYs[i]))) {
+                if (this.currentIndex !== i && 
+                    (positionY >= this.themeTopYs[i] && 
+                    positionY < this.themeTopYs[i+1])) {
                     this.currentIndex = i
                     // console.log(this.currentIndex);
+                    // console.log(this.$refs.nav.currentIndex);
                     this.$refs.nav.currentIndex = this.currentIndex
                 }
             }
         },
         titleClick(index) {
             // console.log(index);
-            this.$refs.scroll.scrollTo(0, -this.themeTopYs[index]+44, 200)            
+            this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)            
         }
     },
     mounted() {
