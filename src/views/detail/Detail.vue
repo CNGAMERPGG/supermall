@@ -14,7 +14,8 @@
             <detail-comment-info ref="comment" :commentInfo="commentInfo"/>
             <good-list ref="recommend" :goods="recommend"/>
         </scroll>
-        <back-top class="back-top" @click.native="backTop" v-show="isShowBackTop"></back-top>
+        <back-top @click.native="backTop" v-show="isShowBackTop" class="back-top"></back-top>
+        <detail-bottom-bar/>
     </div>
 </template>
 
@@ -29,19 +30,18 @@ import Scroll from '../../components/common/scroll/Scroll.vue'
 import DetailGoodsInfo from './childComponents/DetailGoodsInfo.vue'
 import DetailParamInfo from './childComponents/DetailParamInfo.vue'
 import DetailCommentInfo from './childComponents/DetailCommentInfo.vue'
-import BackTop from '@/components/content/backTop/BackTop'
 import GoodList from '../../components/content/goods/GoodList.vue'
 import {debounce} from '@/common/utils'
-import {itemListenerMixin} from '@/common/mixin'
+import {itemListenerMixin, backTopMixin} from '@/common/mixin'
+import DetailBottomBar from './childComponents/DetailBottomBar.vue'
 
 export default {
     name: "Detail",
-    mixins: [itemListenerMixin],
+    mixins: [itemListenerMixin, backTopMixin],
     data() {
         return {
             iid: null,
             res: null,
-            isShowBackTop: false,
             topImages: [],
             goods: {},
             shop: {},
@@ -64,8 +64,8 @@ export default {
         DetailGoodsInfo,
         DetailParamInfo,
         DetailCommentInfo,
-        BackTop,
         GoodList,
+        DetailBottomBar,
     },
     created() {
         // 1.保存传入的iid
@@ -132,12 +132,12 @@ export default {
             this.$refs.scroll.refresh()
             this.getThemeTopY()            
         },
-        backTop() {
-            this.$refs.scroll.scrollTo(0, 0, 300)
-        },
+        // backTop() {
+        //     this.$refs.scroll.scrollTo(0, 0, 300)
+        // },
         contentScroll(position) {
             // 1.判断BackTop是否显示
-            this.isShowBackTop = (-position.y) > 1000
+            this.listenShowBackTop(position)
 
             // // 2.决定tabControl是否吸顶(position: fixed)
             // this.isTabFixed = (-position.y) > this.tabOffsetTop
@@ -162,7 +162,7 @@ export default {
         titleClick(index) {
             // console.log(index);
             this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)            
-        }
+        },
     },
     mounted() {
         
@@ -191,10 +191,11 @@ export default {
 }
 
 .content {
-    height: calc(100% - 44px);
+    height: calc(100% - 44px - 49px);
 }
 
 .back-top {
+    bottom: 60px;
     z-index: 10;
 }
 </style>
