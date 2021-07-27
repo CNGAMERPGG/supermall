@@ -15,7 +15,7 @@
             <good-list ref="recommend" :goods="recommend"/>
         </scroll>
         <back-top @click.native="backTop" v-show="isShowBackTop" class="back-top"></back-top>
-        <detail-bottom-bar/>
+        <detail-bottom-bar @addCart="addToCart"/>
     </div>
 </template>
 
@@ -163,6 +163,21 @@ export default {
             // console.log(index);
             this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200)            
         },
+        addToCart() {
+            // console.log('-----');
+
+            // 1.获取购物车需要展示的信息
+            const product = {}
+            product.image = this.topImages[0]
+            product.title = this.goods.title
+            product.desc = this.goods.desc
+            product.price = this.goods.lowNowPrice
+            product.iid = this.iid
+
+            console.log(product);
+            // 2.将商品添加到购物车
+            this.$store.commit('addCart', product)
+        }
     },
     mounted() {
         
