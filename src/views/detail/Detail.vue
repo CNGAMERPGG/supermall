@@ -4,15 +4,15 @@
                         @titleClick="titleClick"
                         ref="nav"/>
         <scroll class="content" ref="scroll"
-                :probeType="3"
-                @scroll="contentScroll">
-            <detail-swiper :topImages="topImages"/>
-            <detail-base-info :goods="goods"/>
-            <detail-shop-info :shop="shop"/>
-            <detail-goods-info :detailInfo="detailInfo" @imgLoad="goodsImgLoad"/>
-            <detail-param-info ref="params" :paramInfo="paramInfo"/>
-            <detail-comment-info ref="comment" :commentInfo="commentInfo"/>
-            <good-list ref="recommend" :goods="recommend"/>
+            :probeType="3"
+            @scroll="contentScroll">
+        <detail-swiper :topImages="topImages"/>
+        <detail-base-info :goods="goods"/>
+        <detail-shop-info :shop="shop"/>
+        <detail-goods-info :detailInfo="detailInfo" @imgLoad="goodsImgLoad"/>
+        <detail-param-info ref="params" :paramInfo="paramInfo"/>
+        <detail-comment-info ref="comment" :commentInfo="commentInfo"/>
+        <good-list ref="recommend" :goods="recommend"/>
         </scroll>
         <back-top @click.native="backTop" v-show="isShowBackTop" class="back-top"></back-top>
         <detail-bottom-bar @addCart="addToCart"/>
@@ -176,7 +176,7 @@ export default {
 
             console.log(product);
             // 2.将商品添加到购物车
-            this.$store.commit('addCart', product)
+            this.$store.dispatch('addCart', product)
         }
     },
     mounted() {
@@ -197,6 +197,7 @@ export default {
     z-index: 10;
     background-color: #fff;
     height: 100vh;
+    /* height: calc(100% - 44px - 49px); */
 }
 
 .detail-nav {

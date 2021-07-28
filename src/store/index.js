@@ -1,30 +1,23 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import mutations from './mutations'
+import actions from './actions'
+import getters from './getters'
+
 // 1.安装插件
 Vue.use(Vuex)
 
 // 2.创建Store对象
-const store = new Vuex.Store({
-    state: {
-        cartList: []
-    },
-    mutations: {
-        addCart(state, payload){
-            // payload新添加的商品
+const state = {
+    cartList: []
+}
 
-            // 1. 查找之前数组中是否有该商品
-            let oldProduct = state.cartList.find(item => item.iid === payload.iid)
-            
-            // 2.判断oldProduct
-            if (oldProduct) {
-                oldProduct.count += 1
-            } else {
-                payload.count = 1
-                state.cartList.push(payload)
-            }
-        }
-    }
+const store = new Vuex.Store({
+    state,
+    mutations,
+    actions,
+    getters,
 })
 
 // 3.挂载Vue实例上
