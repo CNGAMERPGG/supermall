@@ -35,6 +35,8 @@ import {debounce} from '@/common/utils'
 import {itemListenerMixin, backTopMixin} from '@/common/mixin'
 import DetailBottomBar from './childComponents/DetailBottomBar.vue'
 
+import { mapActions } from 'vuex'
+
 export default {
     name: "Detail",
     mixins: [itemListenerMixin, backTopMixin],
@@ -128,6 +130,7 @@ export default {
 
     },
     methods: {
+        ...mapActions(['addCart']),
         goodsImgLoad() {
             this.$refs.scroll.refresh()
             this.getThemeTopY()            
@@ -174,9 +177,14 @@ export default {
             product.price = this.goods.lowNowPrice
             product.iid = this.iid
 
-            console.log(product);
+            // console.log(product);
             // 2.将商品添加到购物车
-            this.$store.dispatch('addCart', product)
+            this.addCart(product).then(res => {
+                console.log(res);
+            })
+            // this.$store.dispatch('addCart', product).then(res => {
+            //     console.log(res);
+            // })
         }
     },
     mounted() {

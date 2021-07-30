@@ -24,7 +24,7 @@ export default {
         Scroll,
         CartListItem 
     },
-    mounted() {
+    updated() {
         this.$refs.scroll.refresh()
     }
 }
